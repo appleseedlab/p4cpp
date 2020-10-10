@@ -18,6 +18,7 @@ Source: https://github.com/mc36/freeRouter/blob/a5619d78d1b563e0a5dd8fa31fcd7ccc
 ```
 Using `ifdef` to see if specific protocols or tools are being used in the current deployment, if so, then it declares a new flag using `define` to indicate requirements
 <br>
+<br>
 
 ```
 struct headers {
@@ -43,6 +44,7 @@ struct headers {
 }
 ```
 Using `ifdef` to see which header fields are required/defined, and based on that they are adding fields to the header struct.
+<br>
 <br>
 
 ***
@@ -82,6 +84,7 @@ parser ig_prs_main(packet_in pkt,
 ```
 Using `ifndef` to make sure a main flag isn't being redefined.
 Using `ifdef` to see if NAT is being used, and if so, checksum fields for TCP and UDP are included; also used to see if a flag is defined and if so, a corresponding new field in the start state is added.
+<br>
 <br>
 
 ```
@@ -123,6 +126,7 @@ PPPTYPE_MPLS_UCAST:
 #endif
 ```
 `ifdef` flags being used to define new states and to add new cases/matches to transitions select blocks
+<br>
 <br>
 
 ```
@@ -209,3 +213,5 @@ Using `ifdef` to include the main control block in this file and to define new v
 #endif
 ```
 Using `ifdef` to define actions
+<br>
+<br>

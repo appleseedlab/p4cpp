@@ -6,6 +6,7 @@ Source: https://github.com/opennetworkinglab/onos/blob/master/pipelines/fabric/i
 ```
 Using `ifdef` to include header files based on the flags
 <br>
+<br>
 
 ```
 control FabricIngress (inout parsed_headers_t hdr,
@@ -24,6 +25,7 @@ control FabricIngress (inout parsed_headers_t hdr,
 ```
 Using `ifdef` to include control block variables
 <br>
+<br>
 
 ```
     apply {
@@ -37,4 +39,5 @@ Using `ifdef` to include control block variables
     }
 ```
 Using `ifdef` to add statements to the apply block
+<br>
 <br>

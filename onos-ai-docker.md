@@ -15,6 +15,7 @@ state parse_vlan_tag {
 ```
 Using `ifdef` to insert new statements within a state. `if` is also used to evaluate a condition and insert new transition states
 <br>
+<br>
 
 ```
 #ifdef WITH_IPV6
@@ -25,6 +26,7 @@ Using `ifdef` to insert new statements within a state. `if` is also used to eval
 #endif // WITH_IPV6
 ```
 `ifdef` being used to insert a new state in the parser depending on the flag
+<br>
 <br>
 
 ```
@@ -37,6 +39,7 @@ Using `ifdef` to insert new statements within a state. `if` is also used to eval
 #endif // WITH_INT_SINK
 ```
 Using `ifdef` and `else` to determine the last transition state
+<br>
 <br>
 
 ```
@@ -72,6 +75,7 @@ Source: https://github.com/epicLevi/onos-ai-docker/blob/e2aefa79fbe7464671bbfd5e
 #endif // WITH_PORT_COUNTER
 ```
 `ifdef` being used to include header files based on the flags
+<br>
 <br>
 
 ```
