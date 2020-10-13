@@ -49,3 +49,14 @@ control FabricDeparser(packet_out packet,in parsed_headers_t hdr) {
 Here they use `ifdef` if the IPV6 protocol is supported, and if so, we insert code to emit that field in the deparser.
 <br>
 <br>
+
+***
+
+Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/basic/src/main/resources/include/int_definitions.p4
+```
+...
+#define IS_RESUBMITTED(smeta) (smeta.instance_type == BMV2_V1MODEL_INSTANCE_TYPE_RESUBMIT)
+#define IS_RECIRCULATED(smeta) (smeta.instance_type == BMV2_V1MODEL_INSTANCE_TYPE_RECIRC)
+...
+```
+Using `define` to declare macro functions that check is a field in the passed in struct equals to a specific, predefined value

@@ -88,6 +88,7 @@ Using `ifdef` to see if NAT is being used, and if so, checksum fields for TCP an
 <br>
 
 ```
+/* Still inside `parser ig_prs_main()` function */
 #ifdef HAVE_PPPOE
     state prs_pppoeCtrl {
         pkt.extract(hdr.pppoeC);
@@ -117,19 +118,13 @@ PPPTYPE_MPLS_UCAST:
         transition accept;
     }
 #endif
-
-#ifdef HAVE_TAP
-    state prs_eth6 {
-        pkt.extract(hdr.eth6);
-        transition accept;
-    }
-#endif
 ```
 `ifdef` flags being used to define new states and to add new cases/matches to transitions select blocks
 <br>
 <br>
 
 ```
+/* Still inside parser ig_prs_main() function */
 state prs_ipv4 {
         pkt.extract(hdr.ipv4);
         ipv4_checksum.add(hdr.ipv4);
@@ -204,6 +199,7 @@ Using `ifdef` to include the main control block in this file and to define new v
 <br>
 
 ```
+/* Still inside `control IngressControlTunnel()` function*/
 #ifdef HAVE_GRE
     action act_tunnel_gre(SubIntId_t port) {
         hdr.ethernet.ethertype = hdr.gre.gretyp;

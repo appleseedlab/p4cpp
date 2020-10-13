@@ -25,7 +25,7 @@ Using `ifdef` to insert new statements within a state. `if` is also used to eval
     }
 #endif // WITH_IPV6
 ```
-`ifdef` being used to insert a new state in the parser depending on the flag
+`ifdef` being used to insert a new state in the parser depending on the IPV6 flag
 <br>
 <br>
 
@@ -104,3 +104,57 @@ struct egress_headers_t {
 #endif // _EGRESS_HEADERS_P4_
 ```
 Multiple files use the `ifndef` directive to make sure they aren't declaring something multiple times
+
+***
+
+Source: https://github.com/opennetworkinglab/onos/blob/f4add194ade23c003230e209e8fcc1b7dfc86af4/pipelines/fabric/impl/src/main/resources/include/control/forwarding.p4
+```
+    action nop_routing_v4() {
+        // no-op
+#ifdef WTIH_DEBUG
+        routing_v4_counter.count();
+#endif // WITH_DEBUG
+    }
+
+    #ifdef _ROUTING_V4_TABLE_ANNOT
+    _ROUTING_V4_TABLE_ANNOT
+    #endif
+    table routing_v4 {
+        ...
+        }
+        ...
+#ifdef WTIH_DEBUG
+        counters = routing_v4_counter;
+#endif // WITH_DEBUG
+        ...
+    }
+```
+`ifdef` being used as a debug flag to track the routing counts
+<br>
+<br>
+
+```
+#ifdef WITH_IPV6
+    /*
+     * IPv6 Routing Table.
+     */
+    direct_counter(CounterType.packets_and_bytes) routing_v6_counter;
+
+    action set_next_id_routing_v6(next_id_t next_id) {
+        ...
+    }
+
+    table routing_v6 {
+        ...
+    }
+#endif // WITH_IPV6
+
+    apply {
+        if ...;
+        else if...
+#ifdef WITH_IPV6
+        else if (fabric_metadata.fwd_type == FWD_IPV6_UNICAST) routing_v6.apply();
+#endif // WITH_IPV6
+    }
+```
+`ifdef` being used to add IPV6 routing table and call that in the apply statement depending on the IPV6 flag
