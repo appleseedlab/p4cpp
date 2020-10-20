@@ -87,7 +87,58 @@ control ingress {
     ...
 }
 ```
-Using `ifdef` to insert control block statements
+Using `ifdef` to insert control block statements, which potentially change the scope of some lines in this case because an `if` and `else` conditions are added if the flag is defined
+<br>
+<br>
+```
+    if (l2_metadata.lkp_pkt_type == L2_UNICAST) {
+#if defined(L2_DISABLE) && defined(L2_MULTICAST_DISABLE) && defined(L3_MULTICAST_DISABLE)
+        {
+            {
+#else
+        apply(rmac) {
+            rmac_hit {
+#endif /* L2_DISABLE && L2_MULTICAST_DISABLE && L3_MULTICAST_DISABLE */
+                if (DO_LOOKUP(L3)) {
+                    if ((l3_metadata.lkp_ip_type == IPTYPE_IPV4) and
+                        (ipv4_metadata.ipv4_unicast_enabled == TRUE)) {
+                            /* router ACL/PBR */
+#ifndef RACL_SWAP
+                            process_ipv4_racl();
+#endif /* !RACL_SWAP */
+                            process_ipv4_urpf();
+                            process_ipv4_fib();
+#ifdef RACL_SWAP
+                            process_ipv4_racl();
+#endif /* RACL_SWAP */
+
+#ifdef IPV6_DISABLE
+		    }
+#else
+                    } else {
+                        if ((l3_metadata.lkp_ip_type == IPTYPE_IPV6) and
+                            (ipv6_metadata.ipv6_unicast_enabled == TRUE)) {
+                            /* router ACL/PBR */
+#ifndef RACL_SWAP
+                            process_ipv6_racl();
+#endif /* !RACL_SWAP */
+                            process_ipv6_urpf();
+                            process_ipv6_fib();
+#ifdef RACL_SWAP
+                            process_ipv6_racl();
+#endif /* RACL_SWAP */
+                        }
+                    }
+#endif /* IPV6_DISABLE */
+                    process_urpf_bd();
+                }
+            }
+        }
+    } else {
+        process_multicast();
+    }
+```
+A big block of code whose scope is defined by the flags. `if`, `else`, and `else if` statements are added to the change how this block works when compiled. For instance, in the starting of this block, we either define this as a function or as a apply block based on the `L2_DISABLE, `L2_MULTICAST_DISABLE, `L3_MULTICAST_DISABLE` flags
 
 ***
 
