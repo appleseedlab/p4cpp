@@ -1,3 +1,4 @@
+###### 1.1
 Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/header.p4
 ```
 #ifdef WITH_SPGW
@@ -31,8 +32,7 @@ struct spgw_meta_t {
 #endif // WITH_SPGW
 ```
 Here they are adding declaring new header types if the WITH_SPGW type is supported. And they also add a supporting metadata struct inside which specific variables are defined if WITH_SPGW_PCC_GATING is declared somewhere.
-<br>
-<br>
+###### 1.2
 ```
 #ifdef WITH_BNG
 
@@ -49,8 +49,7 @@ struct bng_meta_t {
 #endif // WITH_BNG
 ```
 Similarly, here they are adding new constants and a new struct if BNG (broadband network gateway) is supported
-<br>
-<br>
+###### 1.3
 ```
 struct parsed_headers_t {
     ethernet_t ethernet;
@@ -79,10 +78,9 @@ struct parsed_headers_t {
 Here new fields inside a struct are added based on what features are supported. <br>
 Note: Some header structs are defined irrespective of whether that feature is supported or not (in the same file, you can see that `header ipv6_t` is defined whether or not IPV6 is defined)
 
-***
+###### 2.1
 
 Source: https://github.com/opennetworkinglab/onos/blob/940332696982e212decfe08acb418d01457c0280/pipelines/fabric/impl/src/main/resources/include/int/int_header.p4
-```
 
 ```
 #ifdef WITH_INT_SINK

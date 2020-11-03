@@ -1,3 +1,4 @@
+###### 1.1
 Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/parser.p4
 ```
 parser FabricParser (packet_in packet,
@@ -36,7 +37,7 @@ parser FabricParser (packet_in packet,
 ```
 Here they insert new states into the parser based on the features supported by the program (eg: if IPV6 is supported, we add a new state into the parser to extract IPV6 headers)
 
-***
+###### 2.1
 
 Source: https://github.com/imec-idlab/onos-whisper/blob/9150fcb524ac756492b109c7f4ef5713069744f3/pipelines/fabric/src/main/resources/include/parser.p4
 ```
@@ -71,9 +72,15 @@ parser FabricParser (packet_in packet,
     }
     ...
 }
-Here a whole new state is added to parse IPV6 headers iff the program is set to support IPV6. And in the second block we see that deciding whether to transition to accept state or to another state depends on the WITH_INT flag
-<br>
-<br>
+```
+Here a whole new state is added to parse IPV6 headers iff the program is set to support IPV6. And in the second block we see that deciding whether to transition to accept state or to another state depends on the WITH_INT flag.
+Very similar content found in: 
+* https://github.com/breezestars/vomci-onos/blob/848a7c61cddcce0db50877af5b6af1eae3edc22e/pipelines/fabric/src/main/resources/include/parser.p4
+* https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/parser.p4
+* https://github.com/dnosproject/onos/blob/cb9ea2d617dd1320e1c3ab45c6118af790944dc1/pipelines/fabric/src/main/resources/include/parser.p4
+
+###### 2.2
+
 ```
 #ifdef WITH_INT
     state parse_int {
@@ -116,4 +123,5 @@ Here a whole new state is added to parse IPV6 headers iff the program is set to 
 #endif // WITH_INT
 }
 ```
+
 In the same file, you can observe that if a single feature is enabled for the program, then we include multiple parser states, and inside some of the states, we include new parser and transition statements based on additional sub flags

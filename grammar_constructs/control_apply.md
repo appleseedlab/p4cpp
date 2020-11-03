@@ -1,3 +1,4 @@
+###### 1.1
 Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/parser.p4
 ```
 control FabricDeparser(packet_out packet,in parsed_headers_t hdr) {
@@ -33,9 +34,7 @@ control FabricDeparser(packet_out packet,in parsed_headers_t hdr) {
 }
 ```
 In this deparser control block, we add new emit statements to emit specific headers based on whether the feature is supported or not (eg: if IPV6 is supported, we emit the IPV6 headers). In the above code they have nested the `ifdef` directive so that we check WITH_INT_TRANSIT and WITH_INT_SINK are defined iff WITH_INT is supported/defined; if WITH_INT is not supported, then we don't keep the statements under WITH_INT_TRANSIT or WITH_INT_SINK
-<br>
-<br>
-
+###### 1.2
 Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/fabric.p4
 ```
 control FabricIngress (inout parsed_headers_t hdr,
@@ -88,7 +87,7 @@ control FabricEgress (inout parsed_headers_t hdr,
 ```
 Here, in the Ingress control block, we add a new variable based on the flag. Plus inside the apply block, we invoke another control block's apply statement if that feature is supported
 
-***
+###### 2
 
 Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/control/next.p4
 ```
@@ -121,7 +120,7 @@ control EgressNextControl (inout parsed_headers_t hdr,
 ```
 Towards the end this control block's apply method, they make sure either MPLS or IPV4 is valid and if it is it decrements the TTL. There, they conditionally add a new block inside the else block that if the program supports IPV6 protocol, so if IPV4 is not present and IPV6 is present (and supported by the program), we decrement the IPV6 header's hop_limit
 
-***
+###### 3
 
 Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/bng.p4
 ```
@@ -177,7 +176,7 @@ control bng_ingress_upstream(
 ```
 Here we can see that in `bng_ingress_upstream` control block we add a table and an action specific to IPV6 protocol if it is supported. And inside the apply block, we include a conditional statement to handle IPV6 packets that calls the table iff IPV6 is supported
 
-***
+###### 4
 
 Source: https://github.com/opennetworkinglab/onos/blob/f4add194ade23c003230e209e8fcc1b7dfc86af4/pipelines/fabric/impl/src/main/resources/include/control/forwarding.p4 
 ```
@@ -222,7 +221,7 @@ control Forwarding (inout parsed_headers_t hdr,
 ```
 Similar to the last example, here we add a new action and a table pretaining to IPV6 protocol if the WITH_IPV6 flag is defined. Then in the apply block we call the IPV6 table based on the WITH_IPV6 flag
 
-***
+###### 5
 
 Source:https://github.com/imec-idlab/onos-whisper/blob/9150fcb524ac756492b109c7f4ef5713069744f3/pipelines/fabric/src/main/resources/include/int/int_transit.p4
 ```
@@ -270,7 +269,7 @@ control process_int_transit (
 ```
 Here we can observe that inside an action block, the program gives the user the option to initialize their own INT metadata and add that in the action block. Similarly they also allow the user to define their own set of meta actions to set headers. If none of those are defined by the user, the program uses the default values.
 
-***
+###### 6
 
 Source: https://github.com/xinshengzzy/AHashFlow/blob/59daaff50b92afc05675bdc1d05b83b914e61ca8/src/switch-8.2.0/p4src/multicast.p4
 
@@ -285,3 +284,86 @@ control process_outer_multicast_rpf {
 }
 ```
 Sometimes they have the skeleton of a control block but it only has contents in it if the flag is defined
+
+###### 7
+Source: https://github.com/wyan-all/onos-satellite/blob/master/pipelines/fabric/src/main/resources/include/spgw.p4
+```
+control update_gtpu_checksum(
+        ...
+    )
+    apply {
+        ...
+#ifdef WITH_SPGW_UDP_CSUM_UPDATE
+        // Compute outer UDP checksum.
+        update_checksum_with_payload(gtpu_udp.isValid(),
+            {
+                gtpu_ipv4.src_addr,
+                gtpu_ipv4.dst_addr,
+                8w0,
+                gtpu_ipv4.protocol,
+                gtpu_udp.len,
+                gtpu_udp.sport,
+                gtpu_udp.dport,
+                gtpu_udp.len,
+                gtpu,
+                ipv4,
+                // FIXME: we are assuming only UDP for downlink packets
+                // How to conditionally switch between UDP/TCP/ICMP?
+                udp
+            },
+            gtpu_udp.checksum,
+            HashAlgorithm.csum16
+        );
+#endif // WITH_SPGW_UDP_CSUM_UPDATE
+    }
+}
+```
+Here they add a new instantiation called update_checksum_with_payload to the apply block if the feature to update checksum with payload is supported
+
+###### 8
+Source: https://github.com/wyan-all/onos-satellite/blob/master/pipelines/fabric/src/main/resources/include/bng.p4
+```
+control bng_ingress_downstream(
+        inout parsed_headers_t hdr,
+        inout fabric_metadata_t fmeta,
+        inout standard_metadata_t smeta) {
+
+    ...
+    apply {
+        // We are not sure the pkt is a BNG downstream one, first we need to
+        // verify the line_id matches the one of a subscriber...
+
+        // IPv4
+        if (t_line_session_map.apply().hit) {
+            // Apply QoS only to subscriber traffic. This makes sense only
+            // if the downstream ports are used to receive IP traffic NOT
+            // destined to subscribers, e.g. to services in the compute
+            // nodes.
+            if (hdr.ipv4.isValid()) {
+                switch (t_qos_v4.apply().action_run) {
+                    qos_prio: {
+                        m_prio.execute_meter(fmeta.bng.line_id, fmeta.bng.ds_meter_result);
+                    }
+                    qos_besteff: {
+                        m_besteff.execute_meter(fmeta.bng.line_id, fmeta.bng.ds_meter_result);
+                    }
+                }
+            }
+#ifdef WITH_IPV6
+            // IPv6
+            else if (hdr.ipv6.isValid()) {
+                switch (t_qos_v6.apply().action_run) {
+                    qos_prio: {
+                        m_prio.execute_meter(fmeta.bng.line_id, fmeta.bng.ds_meter_result);
+                    }
+                    qos_besteff: {
+                        m_besteff.execute_meter(fmeta.bng.line_id, fmeta.bng.ds_meter_result);
+                    }
+                }
+            }
+#endif // WITH_IPV6
+        }
+    }
+}
+```
+Like seen in [#2](#2), conditional statements are added to the apply block based on the features supported. Here we add the `else if` conditional block iff the program supports IPV6 protocol

@@ -1,3 +1,4 @@
+###### 1.1
 Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/parser.p4
 ```
     state parse_tcp {
@@ -24,6 +25,12 @@ Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b1589
 ```
 Here, inside each parse state, we either transition to accept or parse an extra field (INT - In-band network telemetry) if the program supports INT
 
+Similar code found at:
+* https://github.com/dnosproject/onos/blob/cb9ea2d617dd1320e1c3ab45c6118af790944dc1/pipelines/fabric/src/main/resources/include/parser.p4
+* https://github.com/ayman014/onos-mosaic/blob/f8e15abe44b3ec5d702e67287f4acdbde3a473a8/pipelines/fabric/impl/src/main/resources/include/parser.p4
+
+###### 1.2
+
 ```
 #ifdef WITH_INT
     ...
@@ -40,9 +47,7 @@ Here, inside each parse state, we either transition to accept or parse an extra 
 ```
 Here we include the parse_int_data state iff we support INT, and we extract the INT data iff WITH_INT_SINK is defined, otherwise we just transition to accept
 
-***
-
-transition block inside a state
+###### 1.3
 ```
 state parse_ethernet {
         packet.extract(hdr.ethernet);
@@ -75,3 +80,33 @@ state parse_ethernet {
     }
 ```
 In inside both of these states, we have a transition block to tell the program to which state to transition to at the end. If add new transition states based on what the program supports (eg: if IPV6 is supported, then we add an option to the transition block to go to parse_ipv6 state if matched)
+
+###### 2.1
+
+Source: https://github.com/ayman014/onos-mosaic/blob/f8e15abe44b3ec5d702e67287f4acdbde3a473a8/pipelines/fabric/impl/src/main/resources/include/parser.p4
+
+```
+parser FabricParser (packet_in packet,
+                     out parsed_headers_t hdr,
+                     inout fabric_metadata_t fabric_metadata,
+                     inout standard_metadata_t standard_metadata) {
+    ...    
+    state parse_udp {
+            packet.extract(hdr.udp);
+            fabric_metadata.l4_sport = hdr.udp.sport;
+            fabric_metadata.l4_dport = hdr.udp.dport;
+            transition select(hdr.udp.dport) {
+    #ifdef WITH_SPGW
+                UDP_PORT_GTPU: parse_gtpu;
+    #endif // WITH_SPGW
+    #ifdef WITH_INT
+                default: parse_int;
+    #else
+                default: accept;
+    #endif // WITH_INT
+            }
+    }
+    ...
+}
+```
+Similarly, here we parse the header to extract UDP data from the packets and then transition to a different state based on the dport. If SPGW is supported, we add a new transition state to parse gtpu, and if the program supports INT, the default transition state is set to parse the int headers, and if INT is not supported, we just accept.
