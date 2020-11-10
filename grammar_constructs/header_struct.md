@@ -1,5 +1,5 @@
 ###### 1.1
-Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/header.p4
+Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/header.p4#L122
 ```
 #ifdef WITH_SPGW
 // GTPU v1
@@ -80,7 +80,7 @@ Note: Some header structs are defined irrespective of whether that feature is su
 
 ###### 2.1
 
-Source: https://github.com/opennetworkinglab/onos/blob/940332696982e212decfe08acb418d01457c0280/pipelines/fabric/impl/src/main/resources/include/int/int_header.p4
+Source: https://github.com/opennetworkinglab/onos/blob/940332696982e212decfe08acb418d01457c0280/pipelines/fabric/impl/src/main/resources/include/int/int_header.p4#L105
 
 ```
 #ifdef WITH_INT_SINK

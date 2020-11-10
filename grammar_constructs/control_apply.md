@@ -1,5 +1,5 @@
 ###### 1.1
-Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/parser.p4
+Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/parser.p4#L261
 ```
 control FabricDeparser(packet_out packet,in parsed_headers_t hdr) {
 
@@ -35,7 +35,7 @@ control FabricDeparser(packet_out packet,in parsed_headers_t hdr) {
 ```
 In this deparser control block, we add new emit statements to emit specific headers based on whether the feature is supported or not (eg: if IPV6 is supported, we emit the IPV6 headers). In the above code they have nested the `ifdef` directive so that we check WITH_INT_TRANSIT and WITH_INT_SINK are defined iff WITH_INT is supported/defined; if WITH_INT is not supported, then we don't keep the statements under WITH_INT_TRANSIT or WITH_INT_SINK
 ###### 1.2
-Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/fabric.p4
+Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/fabric.p4#L46
 ```
 control FabricIngress (inout parsed_headers_t hdr,
                        inout fabric_metadata_t fabric_metadata,
@@ -89,7 +89,7 @@ Here, in the Ingress control block, we add a new variable based on the flag. Plu
 
 ###### 2
 
-Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/control/next.p4
+Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/control/next.p4#L247
 ```
 control EgressNextControl (inout parsed_headers_t hdr,
                            inout fabric_metadata_t fabric_metadata,
@@ -122,7 +122,7 @@ Towards the end this control block's apply method, they make sure either MPLS or
 
 ###### 3
 
-Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/bng.p4
+Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/bng.p4#L35
 ```
 control bng_ingress_upstream(
         inout parsed_headers_t hdr,
@@ -178,7 +178,7 @@ Here we can see that in `bng_ingress_upstream` control block we add a table and 
 
 ###### 4
 
-Source: https://github.com/opennetworkinglab/onos/blob/f4add194ade23c003230e209e8fcc1b7dfc86af4/pipelines/fabric/impl/src/main/resources/include/control/forwarding.p4 
+Source: https://github.com/opennetworkinglab/onos/blob/f4add194ade23c003230e209e8fcc1b7dfc86af4/pipelines/fabric/impl/src/main/resources/include/control/forwarding.p4#L24
 ```
 control Forwarding (inout parsed_headers_t hdr,
                     inout fabric_metadata_t fabric_metadata,
@@ -223,7 +223,7 @@ Similar to the last example, here we add a new action and a table pretaining to 
 
 ###### 5
 
-Source:https://github.com/imec-idlab/onos-whisper/blob/9150fcb524ac756492b109c7f4ef5713069744f3/pipelines/fabric/src/main/resources/include/int/int_transit.p4
+Source: https://github.com/imec-idlab/onos-whisper/blob/9150fcb524ac756492b109c7f4ef5713069744f3/pipelines/fabric/src/main/resources/include/int/int_transit.p4#L20
 ```
 control process_int_transit (
     inout parsed_headers_t hdr,
@@ -271,7 +271,7 @@ Here we can observe that inside an action block, the program gives the user the 
 
 ###### 6
 
-Source: https://github.com/xinshengzzy/AHashFlow/blob/59daaff50b92afc05675bdc1d05b83b914e61ca8/src/switch-8.2.0/p4src/multicast.p4
+Source: https://github.com/xinshengzzy/AHashFlow/blob/59daaff50b92afc05675bdc1d05b83b914e61ca8/src/switch-8.2.0/p4src/multicast.p4#L101
 
 ```
 control process_outer_multicast_rpf {
@@ -286,7 +286,7 @@ control process_outer_multicast_rpf {
 Sometimes they have the skeleton of a control block but it only has contents in it if the flag is defined
 
 ###### 7
-Source: https://github.com/wyan-all/onos-satellite/blob/master/pipelines/fabric/src/main/resources/include/spgw.p4
+Source: https://github.com/wyan-all/onos-satellite/blob/master/pipelines/fabric/src/main/resources/include/spgw.p4#L234
 ```
 control update_gtpu_checksum(
         ...
@@ -321,7 +321,7 @@ control update_gtpu_checksum(
 Here they add a new instantiation called update_checksum_with_payload to the apply block if the feature to update checksum with payload is supported
 
 ###### 8
-Source: https://github.com/wyan-all/onos-satellite/blob/master/pipelines/fabric/src/main/resources/include/bng.p4
+Source: https://github.com/wyan-all/onos-satellite/blob/master/pipelines/fabric/src/main/resources/include/bng.p4#L145
 ```
 control bng_ingress_downstream(
         inout parsed_headers_t hdr,
@@ -366,4 +366,7 @@ control bng_ingress_downstream(
     }
 }
 ```
-Like seen in [#2](#2), conditional statements are added to the apply block based on the features supported. Here we add the `else if` conditional block iff the program supports IPV6 protocol
+Like seen in [#2](#2), conditional statements are added to the apply block based on the features supported. Here we add the `else if` conditional block iff the program supports IPV6 protocol. The conditional block contains a switchStatement
+
+Similar code found at:
+* https://github.com/robertmacdavid/fabric_plus_up4/blob/master/p4src/include/bng.p4 

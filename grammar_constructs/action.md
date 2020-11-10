@@ -1,5 +1,5 @@
 ###### 1.1
-Source: https://github.com/gregorypaskar/p4/blob/c50a6bec93d6ffbb249dd0a0d67a3ddf64ef0b8d/testdata/p4_16_samples/fabric_20190420/include/int/int_transit.p4
+Source: https://github.com/gregorypaskar/p4/blob/c50a6bec93d6ffbb249dd0a0d67a3ddf64ef0b8d/testdata/p4_16_samples/fabric_20190420/include/int/int_transit.p4#L20
 ```
 control process_int_transit (
     inout parsed_headers_t hdr,

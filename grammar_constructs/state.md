@@ -1,5 +1,5 @@
 ###### 1.1
-Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/parser.p4
+Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/parser.p4#L148
 ```
     state parse_tcp {
         packet.extract(hdr.tcp);
@@ -83,7 +83,7 @@ In inside both of these states, we have a transition block to tell the program t
 
 ###### 2.1
 
-Source: https://github.com/ayman014/onos-mosaic/blob/f8e15abe44b3ec5d702e67287f4acdbde3a473a8/pipelines/fabric/impl/src/main/resources/include/parser.p4
+Source: https://github.com/ayman014/onos-mosaic/blob/f8e15abe44b3ec5d702e67287f4acdbde3a473a8/pipelines/fabric/impl/src/main/resources/include/parser.p4#L22
 
 ```
 parser FabricParser (packet_in packet,

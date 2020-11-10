@@ -1,5 +1,5 @@
 ###### 1.1
-Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/parser.p4
+Source: https://github.com/breezestars/onos-barefoot/blob/440d67b3a97363ed9b15894162c4c8bac7ebff05/pipelines/fabric/src/main/resources/include/parser.p4#L22
 ```
 parser FabricParser (packet_in packet,
                      out parsed_headers_t hdr,
@@ -39,7 +39,7 @@ Here they insert new states into the parser based on the features supported by t
 
 ###### 2.1
 
-Source: https://github.com/imec-idlab/onos-whisper/blob/9150fcb524ac756492b109c7f4ef5713069744f3/pipelines/fabric/src/main/resources/include/parser.p4
+Source: https://github.com/imec-idlab/onos-whisper/blob/9150fcb524ac756492b109c7f4ef5713069744f3/pipelines/fabric/src/main/resources/include/parser.p4#L22
 ```
 parser FabricParser (packet_in packet,
                      out parsed_headers_t hdr,
