@@ -72,3 +72,12 @@
 #####  IP_VER_LENGTH
 * Gets defined with a value of 4 at [define.p4](https://github.com/wyan-all/onos-satellite/blob/e38afb37544085321295cf6fc813ddc3101789ee/pipelines/fabric/src/main/resources/include/define.p4#L57)
 * Used at [parser.p4](https://github.com/wyan-all/onos-satellite/blob/e38afb37544085321295cf6fc813ddc3101789ee/pipelines/fabric/src/main/resources/include/parser.p4) inside a transition select argument list
+
+***
+
+Vomci
+
+##### \_PKT_OUT_HDR_ANNOT\_
+* Gets defined at [define.p4](https://github.com/breezestars/vomci-onos/blob/848a7c61cddcce0db50877af5b6af1eae3edc22e/pipelines/fabric/src/main/resources/include/define.p4#L57) if it isn't already defined
+* Used at [header.p4](https://github.com/breezestars/vomci-onos/blob/848a7c61cddcce0db50877af5b6af1eae3edc22e/pipelines/fabric/src/main/resources/include/header.p4#L28)
+    * The macro gets replaced with its value (which is nothing if user hasn't defined it)
